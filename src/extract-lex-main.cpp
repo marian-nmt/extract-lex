@@ -37,8 +37,12 @@ void fix(std::ostream& stream)
 
 int main(int argc, char* argv[])
 {
-  std::cerr << "Starting...\n";
+  if (argc != 6) {
+    std::cerr << "Usage: ./extract_lex corpus.tgt corpus.src grow-diag-final.align output.s2t output.t2s" << std::endl;
+    exit(1);
+  }
 
+  std::cerr << "Starting...\n";
   assert(argc == 6);
   char* &filePathTarget = argv[1];
   char* &filePathSource = argv[2];
@@ -96,12 +100,12 @@ const std::string *extract::Vocab::GetOrAdd(const std::string &word)
 }
 
 void extract::ExtractLex::Process(std::vector<std::string> &toksTarget,
-                         std::vector<std::string> &toksSource,
-                         std::vector<std::string> &toksAlign,
-                         size_t lineCount)
+                                  std::vector<std::string> &toksSource,
+                                  std::vector<std::string> &toksAlign,
+                                  size_t lineCount)
 {
   std::vector<bool> m_sourceAligned(toksSource.size(), false)
-  , m_targetAligned(toksTarget.size(), false);
+                  , m_targetAligned(toksTarget.size(), false);
 
   std::vector<std::string>::const_iterator iterAlign;
   for (iterAlign = toksAlign.begin(); iterAlign != toksAlign.end(); ++iterAlign) {
@@ -164,8 +168,9 @@ void extract::ExtractLex::Process(extract::WordCount &wcIn, const std::string *o
 }
 
 void extract::ExtractLex::ProcessUnaligned(std::vector<std::string> &toksTarget,
-                                  std::vector<std::string> &toksSource
-                                  , const std::vector<bool> &m_sourceAligned, const std::vector<bool> &m_targetAligned)
+                                           std::vector<std::string> &toksSource,
+                                           const std::vector<bool> &m_sourceAligned,
+                                           const std::vector<bool> &m_targetAligned)
 {
   const std::string *nullWord = m_vocab.GetOrAdd("NULL");
 
